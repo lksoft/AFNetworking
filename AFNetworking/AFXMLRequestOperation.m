@@ -1,4 +1,4 @@
-// AFXMLRequestOperation.m
+// MCC_PREFIXED_NAME(AFXMLRequestOperation).m
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -34,7 +34,7 @@ static dispatch_queue_t xml_request_operation_processing_queue() {
     return af_xml_request_operation_processing_queue;
 }
 
-@interface AFXMLRequestOperation ()
+@interface MCC_PREFIXED_NAME(AFXMLRequestOperation) ()
 @property (readwrite, nonatomic, strong) NSXMLParser *responseXMLParser;
 #ifdef __MAC_OS_X_VERSION_MIN_REQUIRED
 @property (readwrite, nonatomic, strong) NSXMLDocument *responseXMLDocument;
@@ -42,7 +42,7 @@ static dispatch_queue_t xml_request_operation_processing_queue() {
 @property (readwrite, nonatomic, strong) NSError *XMLError;
 @end
 
-@implementation AFXMLRequestOperation
+@implementation MCC_PREFIXED_NAME(AFXMLRequestOperation)
 @synthesize responseXMLParser = _responseXMLParser;
 #ifdef __MAC_OS_X_VERSION_MIN_REQUIRED
 @synthesize responseXMLDocument = _responseXMLDocument;
@@ -53,14 +53,14 @@ static dispatch_queue_t xml_request_operation_processing_queue() {
 											 success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSXMLParser *XMLParser))success
 											 failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, NSXMLParser *XMLParser))failure
 {
-    AFXMLRequestOperation *requestOperation = [(AFXMLRequestOperation *)[self alloc] initWithRequest:urlRequest];
-    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    MCC_PREFIXED_NAME(AFXMLRequestOperation) *requestOperation = [(MCC_PREFIXED_NAME(AFXMLRequestOperation) *)[self alloc] initWithRequest:urlRequest];
+    [requestOperation setCompletionBlockWithSuccess:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject) {
         if (success) {
             success(operation.request, operation.response, responseObject);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error) {
         if (failure) {
-            failure(operation.request, operation.response, error, [(AFXMLRequestOperation *)operation responseXMLParser]);
+            failure(operation.request, operation.response, error, [(MCC_PREFIXED_NAME(AFXMLRequestOperation) *)operation responseXMLParser]);
         }
     }];
 
@@ -72,15 +72,15 @@ static dispatch_queue_t xml_request_operation_processing_queue() {
 											   success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSXMLDocument *document))success
 											   failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, NSXMLDocument *document))failure
 {
-    AFXMLRequestOperation *requestOperation = [[self alloc] initWithRequest:urlRequest];
-    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, __unused id responseObject) {
+    MCC_PREFIXED_NAME(AFXMLRequestOperation) *requestOperation = [[self alloc] initWithRequest:urlRequest];
+    [requestOperation setCompletionBlockWithSuccess:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, __unused id responseObject) {
         if (success) {
-            NSXMLDocument *XMLDocument = [(AFXMLRequestOperation *)operation responseXMLDocument];
+            NSXMLDocument *XMLDocument = [(MCC_PREFIXED_NAME(AFXMLRequestOperation) *)operation responseXMLDocument];
             success(operation.request, operation.response, XMLDocument);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error) {
         if (failure) {
-            NSXMLDocument *XMLDocument = [(AFXMLRequestOperation *)operation responseXMLDocument];
+            NSXMLDocument *XMLDocument = [(MCC_PREFIXED_NAME(AFXMLRequestOperation) *)operation responseXMLDocument];
             failure(operation.request, operation.response, error, XMLDocument);
         }
     }];
@@ -126,7 +126,7 @@ static dispatch_queue_t xml_request_operation_processing_queue() {
     self.responseXMLParser.delegate = nil;
 }
 
-#pragma mark - AFHTTPRequestOperation
+#pragma mark - MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 
 + (NSSet *)acceptableContentTypes {
     return [NSSet setWithObjects:@"application/xml", @"text/xml", nil];
@@ -136,8 +136,8 @@ static dispatch_queue_t xml_request_operation_processing_queue() {
     return [[[request URL] pathExtension] isEqualToString:@"xml"] || [super canProcessRequest:request];
 }
 
-- (void)setCompletionBlockWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+- (void)setCompletionBlockWithSuccess:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+                              failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-retain-cycles"

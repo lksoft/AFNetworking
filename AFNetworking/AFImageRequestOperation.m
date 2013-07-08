@@ -1,4 +1,4 @@
-// AFImageRequestOperation.m
+// MCC_PREFIXED_NAME(AFImageRequestOperation).m
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -35,7 +35,7 @@ static dispatch_queue_t image_request_operation_processing_queue() {
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #import <CoreGraphics/CoreGraphics.h>
 
-static UIImage * AFImageWithDataAtScale(NSData *data, CGFloat scale) {
+static UIImage * MCC_PREFIXED_NAME(AFImageWithDataAtScale)(NSData *data, CGFloat scale) {
     if ([UIImage instancesRespondToSelector:@selector(initWithData:scale:)]) {
         return [[UIImage alloc] initWithData:data scale:scale];
     } else {
@@ -44,7 +44,7 @@ static UIImage * AFImageWithDataAtScale(NSData *data, CGFloat scale) {
     }
 }
 
-static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *response, NSData *data, CGFloat scale) {
+static UIImage * MCC_PREFIXED_NAME(AFInflatedImageFromResponseWithDataAtScale)(NSHTTPURLResponse *response, NSData *data, CGFloat scale) {
     if (!data || [data length] == 0) {
         return nil;
     }
@@ -53,7 +53,7 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 
     CGDataProviderRef dataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef)data);
 
-    NSSet *contentTypes = AFContentTypesFromHTTPHeader([[response allHeaderFields] valueForKey:@"Content-Type"]);
+    NSSet *contentTypes = MCC_PREFIXED_NAME(AFContentTypesFromHTTPHeader)([[response allHeaderFields] valueForKey:@"Content-Type"]);
     if ([contentTypes containsObject:@"image/png"]) {
         imageRef = CGImageCreateWithPNGDataProvider(dataProvider,  NULL, true, kCGRenderingIntentDefault);
     } else if ([contentTypes containsObject:@"image/jpeg"]) {
@@ -61,7 +61,7 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
     }
     
     if (!imageRef) {
-        UIImage *image = AFImageWithDataAtScale(data, scale);
+        UIImage *image = MCC_PREFIXED_NAME(AFImageWithDataAtScale)(data, scale);
         if (image.images) {
             CGDataProviderRelease(dataProvider);
             
@@ -118,7 +118,7 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 }
 #endif
 
-@interface AFImageRequestOperation ()
+@interface MCC_PREFIXED_NAME(AFImageRequestOperation) ()
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 @property (readwrite, nonatomic, strong) UIImage *responseImage;
 #elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
@@ -126,7 +126,7 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 #endif
 @end
 
-@implementation AFImageRequestOperation
+@implementation MCC_PREFIXED_NAME(AFImageRequestOperation)
 @synthesize responseImage = _responseImage;
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 @synthesize imageScale = _imageScale;
@@ -161,7 +161,7 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 										 success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image))success
 										 failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error))failure
 {
-    AFImageRequestOperation *requestOperation = [(AFImageRequestOperation *)[self alloc] initWithRequest:urlRequest];
+    MCC_PREFIXED_NAME(AFImageRequestOperation) *requestOperation = [(AFImageRequestOperation *)[self alloc] initWithRequest:urlRequest];
     [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (success) {
             UIImage *image = responseObject;
@@ -194,8 +194,8 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 										 success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSImage *image))success
 										 failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error))failure
 {
-    AFImageRequestOperation *requestOperation = [(AFImageRequestOperation *)[self alloc] initWithRequest:urlRequest];
-    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    MCC_PREFIXED_NAME(AFImageRequestOperation) *requestOperation = [(MCC_PREFIXED_NAME(AFImageRequestOperation) *)[self alloc] initWithRequest:urlRequest];
+    [requestOperation setCompletionBlockWithSuccess:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject) {
         if (success) {
             NSImage *image = responseObject;
             if (imageProcessingBlock) {
@@ -210,7 +210,7 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
                 success(operation.request, operation.response, image);
             }
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error) {
         if (failure) {
             failure(operation.request, operation.response, error);
         }
@@ -239,9 +239,9 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 - (UIImage *)responseImage {
     if (!_responseImage && [self.responseData length] > 0 && [self isFinished]) {
         if (self.automaticallyInflatesResponseImage) {
-            self.responseImage = AFInflatedImageFromResponseWithDataAtScale(self.response, self.responseData, self.imageScale);
+            self.responseImage = MCC_PREFIXED_NAME(AFInflatedImageFromResponseWithDataAtScale)(self.response, self.responseData, self.imageScale);
         } else {
-            self.responseImage = AFImageWithDataAtScale(self.responseData, self.imageScale);
+            self.responseImage = MCC_PREFIXED_NAME(AFImageWithDataAtScale)(self.responseData, self.imageScale);
         }
     }
 
@@ -273,7 +273,7 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
 }
 #endif
 
-#pragma mark - AFHTTPRequestOperation
+#pragma mark - MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 
 + (NSSet *)acceptableContentTypes {
     return [NSSet setWithObjects:@"image/tiff", @"image/jpeg", @"image/gif", @"image/png", @"image/ico", @"image/x-icon", @"image/bmp", @"image/x-bmp", @"image/x-xbitmap", @"image/x-win-bitmap", nil];
@@ -289,8 +289,8 @@ static UIImage * AFInflatedImageFromResponseWithDataAtScale(NSHTTPURLResponse *r
     return [_acceptablePathExtension containsObject:[[request URL] pathExtension]] || [super canProcessRequest:request];
 }
 
-- (void)setCompletionBlockWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+- (void)setCompletionBlockWithSuccess:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+                              failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-retain-cycles"

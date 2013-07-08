@@ -1,4 +1,4 @@
-// AFPropertyListRequestOperation.h
+// MCC_PREFIXED_NAME(AFPropertyListRequestOperation).h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -32,7 +32,7 @@
 
  - `application/x-plist`
  */
-@interface AFPropertyListRequestOperation : AFHTTPRequestOperation
+@interface MCC_PREFIXED_NAME(AFPropertyListRequestOperation) : MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 
 ///----------------------------
 /// @name Getting Response Data

@@ -1,4 +1,4 @@
-// AFHTTPRequestOperation.h
+// MCC_PREFIXED_NAME(AFHTTPRequestOperation).h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -26,7 +26,7 @@
 /**
  `AFHTTPRequestOperation` is a subclass of `AFURLConnectionOperation` for requests using the HTTP or HTTPS protocols. It encapsulates the concept of acceptable status codes and content types, which determine the success or failure of a request.
  */
-@interface AFHTTPRequestOperation : AFURLConnectionOperation
+@interface MCC_PREFIXED_NAME(AFHTTPRequestOperation) : MCC_PREFIXED_NAME(AFURLConnectionOperation)
 
 ///----------------------------------------------
 /// @name Getting HTTP URL Connection Information
@@ -117,8 +117,8 @@
  @param success The block to be executed on the completion of a successful request. This block has no return value and takes two arguments: the receiver operation and the object constructed from the response data of the request.
  @param failure The block to be executed on the completion of an unsuccessful request. This block has no return value and takes two arguments: the receiver operation and the error that occurred during the request.
  */
-- (void)setCompletionBlockWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+- (void)setCompletionBlockWithSuccess:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+                              failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure;
 
 @end
 
@@ -129,5 +129,5 @@
 /**
  Returns a set of MIME types detected in an HTTP `Accept` or `Content-Type` header.
  */
-extern NSSet * AFContentTypesFromHTTPHeader(NSString *string);
+extern NSSet * MCC_PREFIXED_NAME(AFContentTypesFromHTTPHeader)(NSString *string);
 

@@ -1,4 +1,4 @@
-// AFXMLRequestOperation.h
+// MCC_PREFIXED_NAME(AFXMLRequestOperation).h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -35,11 +35,11 @@
  - `application/xml`
  - `text/xml`
 
- ## Use With AFHTTPClient
+ ## Use With MCC_PREFIXED_NAME(AFHTTPClient)
 
  When `AFXMLRequestOperation` is registered with `AFHTTPClient`, the response object in the success callback of `HTTPRequestOperationWithRequest:success:failure:` will be an instance of `NSXMLParser`. On platforms that support `NSXMLDocument`, you have the option to ignore the response object, and simply use the `responseXMLDocument` property of the operation argument of the callback.
  */
-@interface AFXMLRequestOperation : AFHTTPRequestOperation
+@interface MCC_PREFIXED_NAME(AFXMLRequestOperation) : MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 
 ///----------------------------
 /// @name Getting Response Data

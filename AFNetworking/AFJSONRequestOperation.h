@@ -1,4 +1,4 @@
-// AFJSONRequestOperation.h
+// MCC_PREFIXED_NAME(AFJSONRequestOperation).h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 // 
@@ -35,7 +35,7 @@
 
  @warning JSON parsing will use the built-in `NSJSONSerialization` class.
  */
-@interface AFJSONRequestOperation : AFHTTPRequestOperation
+@interface MCC_PREFIXED_NAME(AFJSONRequestOperation) : MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 
 ///----------------------------
 /// @name Getting Response Data

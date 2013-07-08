@@ -1,4 +1,4 @@
-// AFURLConnectionOperation.h
+// MCC_PREFIXED_NAME(AFURLConnectionOperation).h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -23,6 +23,8 @@
 #import <Foundation/Foundation.h>
 
 #import <Availability.h>
+
+#import "MCCCommonHeader.h"
 
 /**
  `AFURLConnectionOperation` is a subclass of `NSOperation` that implements `NSURLConnection` delegate methods.
@@ -93,13 +95,13 @@
 
 #ifdef _AFNETWORKING_PIN_SSL_CERTIFICATES_
 typedef enum {
-    AFSSLPinningModeNone,
-    AFSSLPinningModePublicKey,
-    AFSSLPinningModeCertificate,
-} AFURLConnectionOperationSSLPinningMode;
+    MCC_PREFIXED_NAME(AFSSLPinningModeNone),
+    MCC_PREFIXED_NAME(AFSSLPinningModePublicKey),
+    MCC_PREFIXED_NAME(AFSSLPinningModeCertificate),
+} MCC_PREFIXED_NAME(AFURLConnectionOperationSSLPinningMode);
 #endif
 
-@interface AFURLConnectionOperation : NSOperation <NSURLConnectionDelegate,
+@interface MCC_PREFIXED_NAME(AFURLConnectionOperation) : NSOperation <NSURLConnectionDelegate,
 #if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000) || \
     (defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1080)
 NSURLConnectionDataDelegate, 
@@ -186,7 +188,7 @@ NSCoding, NSCopying>
  To enable SSL Pinning, `#define _AFNETWORKING_PIN_SSL_CERTIFICATES_` in `Prefix.pch`. Also, make sure that the Security framework is linked with the binary. See the "SSL Pinning" section in the `AFURLConnectionOperation`" header for more information.
  */
 #ifdef _AFNETWORKING_PIN_SSL_CERTIFICATES_
-@property (nonatomic, assign) AFURLConnectionOperationSSLPinningMode SSLPinningMode;
+@property (nonatomic, assign) MCC_PREFIXED_NAME(AFURLConnectionOperationSSLPinningMode) SSLPinningMode;
 #endif
 
 ///------------------------
@@ -217,7 +219,7 @@ NSCoding, NSCopying>
 @property (nonatomic, strong) NSDictionary *userInfo;
 
 ///------------------------------------------------------
-/// @name Initializing an AFURLConnectionOperation Object
+/// @name Initializing an MCC_PREFIXED_NAME(AFURLConnectionOperation) Object
 ///------------------------------------------------------
 
 /**
@@ -348,9 +350,9 @@ NSCoding, NSCopying>
  The following constants are provided by `AFURLConnectionOperation` as possible SSL Pinning options.
 
  enum {
- AFSSLPinningModeNone,
- AFSSLPinningModePublicKey,
- AFSSLPinningModeCertificate,
+ MCC_PREFIXED_NAME(AFSSLPinningModeNone),
+ MCC_PREFIXED_NAME(AFSSLPinningModePublicKey),
+ MCC_PREFIXED_NAME(AFSSLPinningModeCertificate),
  }
  
  `AFSSLPinningModeNone`
@@ -366,8 +368,8 @@ NSCoding, NSCopying>
 
  These keys may exist in the user info dictionary, in addition to those defined for NSError.
 
- - `NSString * const AFNetworkingOperationFailingURLRequestErrorKey`
- - `NSString * const AFNetworkingOperationFailingURLResponseErrorKey`
+ - `NSString * const MCC_PREFIXED_NAME(AFNetworkingOperationFailingURLRequestErrorKey)`
+ - `NSString * const MCC_PREFIXED_NAME(AFNetworkingOperationFailingURLResponseErrorKey)`
 
  ### Constants
 
@@ -381,16 +383,16 @@ NSCoding, NSCopying>
 
  The following error domain is predefined.
 
- - `NSString * const AFNetworkingErrorDomain`
+ - `NSString * const MCC_PREFIXED_NAME(AFNetworkingErrorDomain)`
 
  ### Constants
 
  `AFNetworkingErrorDomain`
- AFNetworking errors. Error codes for `AFNetworkingErrorDomain` correspond to codes in `NSURLErrorDomain`.
+ MCC_PREFIXED_NAME(AFNetworking) errors. Error codes for `AFNetworkingErrorDomain` correspond to codes in `NSURLErrorDomain`.
  */
-extern NSString * const AFNetworkingErrorDomain;
-extern NSString * const AFNetworkingOperationFailingURLRequestErrorKey;
-extern NSString * const AFNetworkingOperationFailingURLResponseErrorKey;
+extern NSString * const MCC_PREFIXED_NAME(AFNetworkingErrorDomain);
+extern NSString * const MCC_PREFIXED_NAME(AFNetworkingOperationFailingURLRequestErrorKey);
+extern NSString * const MCC_PREFIXED_NAME(AFNetworkingOperationFailingURLResponseErrorKey);
 
 ///--------------------
 /// @name Notifications
@@ -399,9 +401,9 @@ extern NSString * const AFNetworkingOperationFailingURLResponseErrorKey;
 /**
  Posted when an operation begins executing.
  */
-extern NSString * const AFNetworkingOperationDidStartNotification;
+extern NSString * const MCC_PREFIXED_NAME(AFNetworkingOperationDidStartNotification);
 
 /**
  Posted when an operation finishes.
  */
-extern NSString * const AFNetworkingOperationDidFinishNotification;
+extern NSString * const MCC_PREFIXED_NAME(AFNetworkingOperationDidFinishNotification);

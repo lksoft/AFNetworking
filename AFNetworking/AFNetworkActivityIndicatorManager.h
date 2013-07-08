@@ -1,4 +1,4 @@
-// AFNetworkActivityIndicatorManager.h
+// MCC_PREFIXED_NAME(AFNetworkActivityIndicatorManager).h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -39,7 +39,7 @@
  See the Apple Human Interface Guidelines section about the Network Activity Indicator for more information:
  http://developer.apple.com/library/iOS/#documentation/UserExperience/Conceptual/MobileHIG/UIElementGuidelines/UIElementGuidelines.html#//apple_ref/doc/uid/TP40006556-CH13-SW44
  */
-@interface AFNetworkActivityIndicatorManager : NSObject
+@interface MCC_PREFIXED_NAME(AFNetworkActivityIndicatorManager) : NSObject
 
 /**
  A Boolean value indicating whether the manager is enabled.

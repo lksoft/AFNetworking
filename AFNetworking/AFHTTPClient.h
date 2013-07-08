@@ -1,4 +1,4 @@
-// AFHTTPClient.h
+// MCC_PREFIXED_NAME(AFHTTPClient).h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -75,11 +75,11 @@
 
 #ifdef _SYSTEMCONFIGURATION_H
 typedef enum {
-    AFNetworkReachabilityStatusUnknown          = -1,
-    AFNetworkReachabilityStatusNotReachable     = 0,
-    AFNetworkReachabilityStatusReachableViaWWAN = 1,
-    AFNetworkReachabilityStatusReachableViaWiFi = 2,
-} AFNetworkReachabilityStatus;
+    MCC_PREFIXED_NAME(AFNetworkReachabilityStatusUnknown)          = -1,
+    MCC_PREFIXED_NAME(AFNetworkReachabilityStatusNotReachable)     = 0,
+    MCC_PREFIXED_NAME(AFNetworkReachabilityStatusReachableViaWWAN) = 1,
+    MCC_PREFIXED_NAME(AFNetworkReachabilityStatusReachableViaWiFi) = 2,
+} MCC_PREFIXED_NAME(AFNetworkReachabilityStatus);
 #else
 #pragma message("SystemConfiguration framework not found in project, or not included in precompiled header. Network reachability functionality will not be available.")
 #endif
@@ -93,15 +93,15 @@ typedef enum {
 #endif
 
 typedef enum {
-    AFFormURLParameterEncoding,
-    AFJSONParameterEncoding,
-    AFPropertyListParameterEncoding,
-} AFHTTPClientParameterEncoding;
+    MCC_PREFIXED_NAME(AFFormURLParameterEncoding),
+    MCC_PREFIXED_NAME(AFJSONParameterEncoding),
+    MCC_PREFIXED_NAME(AFPropertyListParameterEncoding),
+} MCC_PREFIXED_NAME(AFHTTPClientParameterEncoding);
 
-@class AFHTTPRequestOperation;
-@protocol AFMultipartFormData;
+@class MCC_PREFIXED_NAME(AFHTTPRequestOperation);
+@protocol MCC_PREFIXED_NAME(AFMultipartFormData);
 
-@interface AFHTTPClient : NSObject <NSCoding, NSCopying>
+@interface MCC_PREFIXED_NAME(AFHTTPClient) : NSObject <NSCoding, NSCopying>
 
 ///---------------------------------------
 /// @name Accessing HTTP Client Properties
@@ -122,7 +122,7 @@ typedef enum {
 
  @warning Some nested parameter structures, such as a keyed array of hashes containing inconsistent keys (i.e. `@{@"": @[@{@"a" : @(1)}, @{@"b" : @(2)}]}`), cannot be unambiguously represented in query strings. It is strongly recommended that an unambiguous encoding, such as `AFJSONParameterEncoding`, is used when posting complicated or nondeterministic parameter structures.
  */
-@property (nonatomic, assign) AFHTTPClientParameterEncoding parameterEncoding;
+@property (nonatomic, assign) MCC_PREFIXED_NAME(AFHTTPClientParameterEncoding) parameterEncoding;
 
 /**
  The operation queue which manages operations enqueued by the HTTP client.
@@ -135,14 +135,14 @@ typedef enum {
  @warning This property requires the `SystemConfiguration` framework. Add it in the active target's "Link Binary With Library" build phase, and add `#import <SystemConfiguration/SystemConfiguration.h>` to the header prefix of the project (`Prefix.pch`).
  */
 #ifdef _SYSTEMCONFIGURATION_H
-@property (readonly, nonatomic, assign) AFNetworkReachabilityStatus networkReachabilityStatus;
+@property (readonly, nonatomic, assign) MCC_PREFIXED_NAME(AFNetworkReachabilityStatus) networkReachabilityStatus;
 #endif
 
 /**
  Default SSL pinning mode for each `AFHTTPRequestOperation` created by `HTTPRequestOperationWithRequest:success:failure:`.
  */
 #ifdef _AFNETWORKING_PIN_SSL_CERTIFICATES_
-@property (nonatomic, assign) AFURLConnectionOperationSSLPinningMode defaultSSLPinningMode;
+@property (nonatomic, assign) MCC_PREFIXED_NAME(AFURLConnectionOperationSSLPinningMode) defaultSSLPinningMode;
 #endif
 
 /**
@@ -188,7 +188,7 @@ typedef enum {
  @warning This method requires the `SystemConfiguration` framework. Add it in the active target's "Link Binary With Library" build phase, and add `#import <SystemConfiguration/SystemConfiguration.h>` to the header prefix of the project (`Prefix.pch`).
  */
 #ifdef _SYSTEMCONFIGURATION_H
-- (void)setReachabilityStatusChangeBlock:(void (^)(AFNetworkReachabilityStatus status))block;
+- (void)setReachabilityStatusChangeBlock:(void (^)(MCC_PREFIXED_NAME(AFNetworkReachabilityStatus) status))block;
 #endif
 
 ///-------------------------------
@@ -302,7 +302,7 @@ typedef enum {
 - (NSMutableURLRequest *)multipartFormRequestWithMethod:(NSString *)method
                                                    path:(NSString *)path
                                              parameters:(NSDictionary *)parameters
-                              constructingBodyWithBlock:(void (^)(id <AFMultipartFormData> formData))block;
+                              constructingBodyWithBlock:(void (^)(id <MCC_PREFIXED_NAME(AFMultipartFormData)> formData))block;
 
 ///-------------------------------
 /// @name Creating HTTP Operations
@@ -317,9 +317,9 @@ typedef enum {
  @param success A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: the created request operation and the object created from the response data of request.
  @param failure A block object to be executed when the request operation finishes unsuccessfully, or that finishes successfully, but encountered an error while parsing the response data. This block has no return value and takes two arguments:, the created request operation and the `NSError` object describing the network or parsing error that occurred.
  */
-- (AFHTTPRequestOperation *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
-                                                    success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                                                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+- (MCC_PREFIXED_NAME(AFHTTPRequestOperation) *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest
+                                                    success:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+                                                    failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure;
 
 ///----------------------------------------
 /// @name Managing Enqueued HTTP Operations
@@ -330,7 +330,7 @@ typedef enum {
 
  @param operation The HTTP request operation to be enqueued.
  */
-- (void)enqueueHTTPRequestOperation:(AFHTTPRequestOperation *)operation;
+- (void)enqueueHTTPRequestOperation:(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *)operation;
 
 /**
  Cancels all operations in the HTTP client's operation queue whose URLs match the specified HTTP method and path.
@@ -386,8 +386,8 @@ typedef enum {
  */
 - (void)getPath:(NSString *)path
      parameters:(NSDictionary *)parameters
-        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+        success:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+        failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure;
 
 /**
  Creates an `AFHTTPRequestOperation` with a `POST` request, and enqueues it to the HTTP client's operation queue.
@@ -401,8 +401,8 @@ typedef enum {
  */
 - (void)postPath:(NSString *)path
       parameters:(NSDictionary *)parameters
-         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+         success:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+         failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure;
 
 /**
  Creates an `AFHTTPRequestOperation` with a `PUT` request, and enqueues it to the HTTP client's operation queue.
@@ -416,8 +416,8 @@ typedef enum {
  */
 - (void)putPath:(NSString *)path
      parameters:(NSDictionary *)parameters
-        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+        success:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+        failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure;
 
 /**
  Creates an `AFHTTPRequestOperation` with a `DELETE` request, and enqueues it to the HTTP client's operation queue.
@@ -431,8 +431,8 @@ typedef enum {
  */
 - (void)deletePath:(NSString *)path
         parameters:(NSDictionary *)parameters
-           success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+           success:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+           failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure;
 
 /**
  Creates an `AFHTTPRequestOperation` with a `PATCH` request, and enqueues it to the HTTP client's operation queue.
@@ -446,8 +446,8 @@ typedef enum {
  */
 - (void)patchPath:(NSString *)path
        parameters:(NSDictionary *)parameters
-          success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+          success:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+          failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure;
 @end
 
 ///----------------
@@ -460,10 +460,10 @@ typedef enum {
  The following constants are provided by `AFHTTPClient` as possible network reachability statuses.
 
  enum {
- AFNetworkReachabilityStatusUnknown,
- AFNetworkReachabilityStatusNotReachable,
- AFNetworkReachabilityStatusReachableViaWWAN,
- AFNetworkReachabilityStatusReachableViaWiFi,
+ MCC_PREFIXED_NAME(AFNetworkReachabilityStatusUnknown),
+ MCC_PREFIXED_NAME(AFNetworkReachabilityStatusNotReachable),
+ MCC_PREFIXED_NAME(AFNetworkReachabilityStatusReachableViaWWAN),
+ MCC_PREFIXED_NAME(AFNetworkReachabilityStatusReachableViaWiFi),
  }
 
  `AFNetworkReachabilityStatusUnknown`
@@ -491,9 +491,9 @@ typedef enum {
  The following constants are provided by `AFHTTPClient` as possible methods for serializing parameters into query string or message body values.
 
  enum {
- AFFormURLParameterEncoding,
- AFJSONParameterEncoding,
- AFPropertyListParameterEncoding,
+ MCC_PREFIXED_NAME(AFFormURLParameterEncoding),
+ MCC_PREFIXED_NAME(AFJSONParameterEncoding),
+ MCC_PREFIXED_NAME(AFPropertyListParameterEncoding),
  }
 
  `AFFormURLParameterEncoding`
@@ -522,7 +522,7 @@ typedef enum {
 
  @return A percent-escaped query string
  */
-extern NSString * AFQueryStringFromParametersWithEncoding(NSDictionary *parameters, NSStringEncoding encoding);
+extern NSString * MCC_PREFIXED_NAME(AFQueryStringFromParametersWithEncoding)(NSDictionary *parameters, NSStringEncoding encoding);
 
 ///--------------------
 /// @name Notifications
@@ -535,8 +535,8 @@ extern NSString * AFQueryStringFromParametersWithEncoding(NSDictionary *paramete
  @warning In order for network reachability to be monitored, include the `SystemConfiguration` framework in the active target's "Link Binary With Library" build phase, and add `#import <SystemConfiguration/SystemConfiguration.h>` to the header prefix of the project (`Prefix.pch`).
  */
 #ifdef _SYSTEMCONFIGURATION_H
-extern NSString * const AFNetworkingReachabilityDidChangeNotification;
-extern NSString * const AFNetworkingReachabilityNotificationStatusItem;
+extern NSString * const MCC_PREFIXED_NAME(AFNetworkingReachabilityDidChangeNotification);
+extern NSString * const MCC_PREFIXED_NAME(AFNetworkingReachabilityNotificationStatusItem);
 #endif
 
 #pragma mark -
@@ -547,7 +547,7 @@ extern NSTimeInterval const kAFUploadStream3GSuggestedDelay;
 /**
  The `AFMultipartFormData` protocol defines the methods supported by the parameter in the block argument of `AFHTTPClient -multipartFormRequestWithMethod:path:parameters:constructingBodyWithBlock:`.
  */
-@protocol AFMultipartFormData
+@protocol MCC_PREFIXED_NAME(AFMultipartFormData)
 
 /**
  Appends the HTTP header `Content-Disposition: file; filename=#{generated filename}; name=#{name}"` and `Content-Type: #{generated mimeType}`, followed by the encoded file data and the multipart form boundary.

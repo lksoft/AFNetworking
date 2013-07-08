@@ -26,7 +26,7 @@
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #import "UIImageView+AFNetworking.h"
 
-@interface AFImageCache : NSCache
+@interface MCC_PREFIXED_NAME(AFImageCache) : NSCache
 - (UIImage *)cachedImageForRequest:(NSURLRequest *)request;
 - (void)cacheImage:(UIImage *)image
         forRequest:(NSURLRequest *)request;
@@ -37,7 +37,7 @@
 static char kAFImageRequestOperationObjectKey;
 
 @interface UIImageView (_AFNetworking)
-@property (readwrite, nonatomic, strong, setter = af_setImageRequestOperation:) AFImageRequestOperation *af_imageRequestOperation;
+@property (readwrite, nonatomic, strong, setter = af_setImageRequestOperation:) MCC_PREFIXED_NAME(AFImageRequestOperation) *af_imageRequestOperation;
 @end
 
 @implementation UIImageView (_AFNetworking)
@@ -68,7 +68,7 @@ static char kAFImageRequestOperationObjectKey;
 }
 
 + (AFImageCache *)af_sharedImageCache {
-    static AFImageCache *_af_imageCache = nil;
+    static MCC_PREFIXED_NAME(AFImageCache) *_af_imageCache = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
         _af_imageCache = [[AFImageCache alloc] init];
@@ -113,7 +113,7 @@ static char kAFImageRequestOperationObjectKey;
             self.image = placeholderImage;
         }
 
-        AFImageRequestOperation *requestOperation = [[AFImageRequestOperation alloc] initWithRequest:urlRequest];
+        MCC_PREFIXED_NAME(AFImageRequestOperation) *requestOperation = [[AFImageRequestOperation alloc] initWithRequest:urlRequest];
         [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             if ([urlRequest isEqual:[self.af_imageRequestOperation request]]) {
                 if (success) {
@@ -155,11 +155,11 @@ static char kAFImageRequestOperationObjectKey;
 
 #pragma mark -
 
-static inline NSString * AFImageCacheKeyFromURLRequest(NSURLRequest *request) {
+static inline NSString * MCC_PREFIXED_NAME(AFImageCacheKeyFromURLRequest)(NSURLRequest *request) {
     return [[request URL] absoluteString];
 }
 
-@implementation AFImageCache
+@implementation MCC_PREFIXED_NAME(AFImageCache)
 
 - (UIImage *)cachedImageForRequest:(NSURLRequest *)request {
     switch ([request cachePolicy]) {

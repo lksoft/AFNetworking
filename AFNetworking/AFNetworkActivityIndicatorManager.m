@@ -1,4 +1,4 @@
-// AFNetworkActivityIndicatorManager.m
+// MCC_PREFIXED_NAME(AFNetworkActivityIndicatorManager).m
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -27,7 +27,7 @@
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 static NSTimeInterval const kAFNetworkActivityIndicatorInvisibilityDelay = 0.17;
 
-@interface AFNetworkActivityIndicatorManager ()
+@interface MCC_PREFIXED_NAME(AFNetworkActivityIndicatorManager) ()
 @property (readwrite, nonatomic, assign) NSInteger activityCount;
 @property (readwrite, nonatomic, strong) NSTimer *activityIndicatorVisibilityTimer;
 @property (readonly, nonatomic, getter = isNetworkActivityIndicatorVisible) BOOL networkActivityIndicatorVisible;
@@ -36,14 +36,14 @@ static NSTimeInterval const kAFNetworkActivityIndicatorInvisibilityDelay = 0.17;
 - (void)updateNetworkActivityIndicatorVisibilityDelayed;
 @end
 
-@implementation AFNetworkActivityIndicatorManager
+@implementation MCC_PREFIXED_NAME(AFNetworkActivityIndicatorManager)
 @synthesize activityCount = _activityCount;
 @synthesize activityIndicatorVisibilityTimer = _activityIndicatorVisibilityTimer;
 @synthesize enabled = _enabled;
 @dynamic networkActivityIndicatorVisible;
 
 + (instancetype)sharedManager {
-    static AFNetworkActivityIndicatorManager *_sharedManager = nil;
+    static MCC_PREFIXED_NAME(AFNetworkActivityIndicatorManager) *_sharedManager = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
         _sharedManager = [[self alloc] init];
@@ -139,14 +139,14 @@ static NSTimeInterval const kAFNetworkActivityIndicatorInvisibilityDelay = 0.17;
 }
 
 - (void)networkingOperationDidStart:(NSNotification *)notification {
-    AFURLConnectionOperation *connectionOperation = [notification object];
+    MCC_PREFIXED_NAME(AFURLConnectionOperation) *connectionOperation = [notification object];
     if (connectionOperation.request.URL) {
         [self incrementActivityCount];
     }
 }
 
 - (void)networkingOperationDidFinish:(NSNotification *)notification {
-    AFURLConnectionOperation *connectionOperation = [notification object];
+    MCC_PREFIXED_NAME(AFURLConnectionOperation) *connectionOperation = [notification object];
     if (connectionOperation.request.URL) {
         [self decrementActivityCount];
     }

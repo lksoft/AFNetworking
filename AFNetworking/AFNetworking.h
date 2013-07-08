@@ -1,4 +1,4 @@
-// AFNetworking.h
+// MCC_PREFIXED_NAME(AFNetworking).h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 // 

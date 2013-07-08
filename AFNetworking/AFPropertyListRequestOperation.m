@@ -1,4 +1,4 @@
-// AFPropertyListRequestOperation.m
+// MCC_PREFIXED_NAME(AFPropertyListRequestOperation).m
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -32,13 +32,13 @@ static dispatch_queue_t property_list_request_operation_processing_queue() {
     return af_property_list_request_operation_processing_queue;
 }
 
-@interface AFPropertyListRequestOperation ()
+@interface MCC_PREFIXED_NAME(AFPropertyListRequestOperation) ()
 @property (readwrite, nonatomic) id responsePropertyList;
 @property (readwrite, nonatomic, assign) NSPropertyListFormat propertyListFormat;
 @property (readwrite, nonatomic) NSError *propertyListError;
 @end
 
-@implementation AFPropertyListRequestOperation
+@implementation MCC_PREFIXED_NAME(AFPropertyListRequestOperation)
 @synthesize responsePropertyList = _responsePropertyList;
 @synthesize propertyListReadOptions = _propertyListReadOptions;
 @synthesize propertyListFormat = _propertyListFormat;
@@ -48,14 +48,14 @@ static dispatch_queue_t property_list_request_operation_processing_queue() {
 												success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, id propertyList))success
 												failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id propertyList))failure
 {
-    AFPropertyListRequestOperation *requestOperation = [(AFPropertyListRequestOperation *)[self alloc] initWithRequest:request];
-    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    MCC_PREFIXED_NAME(AFPropertyListRequestOperation) *requestOperation = [(MCC_PREFIXED_NAME(AFPropertyListRequestOperation) *)[self alloc] initWithRequest:request];
+    [requestOperation setCompletionBlockWithSuccess:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject) {
         if (success) {
             success(operation.request, operation.response, responseObject);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error) {
         if (failure) {
-            failure(operation.request, operation.response, error, [(AFPropertyListRequestOperation *)operation responsePropertyList]);
+            failure(operation.request, operation.response, error, [(MCC_PREFIXED_NAME(AFPropertyListRequestOperation) *)operation responsePropertyList]);
         }
     }];
 
@@ -94,7 +94,7 @@ static dispatch_queue_t property_list_request_operation_processing_queue() {
     }
 }
 
-#pragma mark - AFHTTPRequestOperation
+#pragma mark - MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 
 + (NSSet *)acceptableContentTypes {
     return [NSSet setWithObjects:@"application/x-plist", nil];
@@ -104,8 +104,8 @@ static dispatch_queue_t property_list_request_operation_processing_queue() {
     return [[[request URL] pathExtension] isEqualToString:@"plist"] || [super canProcessRequest:request];
 }
 
-- (void)setCompletionBlockWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+- (void)setCompletionBlockWithSuccess:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+                              failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-retain-cycles"

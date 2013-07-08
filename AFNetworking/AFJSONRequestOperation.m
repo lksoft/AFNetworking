@@ -1,4 +1,4 @@
-// AFJSONRequestOperation.m
+// MCC_PREFIXED_NAME(AFJSONRequestOperation).m
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -32,13 +32,13 @@ static dispatch_queue_t json_request_operation_processing_queue() {
     return af_json_request_operation_processing_queue;
 }
 
-@interface AFJSONRequestOperation ()
+@interface MCC_PREFIXED_NAME(AFJSONRequestOperation) ()
 @property (readwrite, nonatomic, strong) id responseJSON;
 @property (readwrite, nonatomic, strong) NSError *JSONError;
 @property (readwrite, nonatomic, strong) NSRecursiveLock *lock;
 @end
 
-@implementation AFJSONRequestOperation
+@implementation MCC_PREFIXED_NAME(AFJSONRequestOperation)
 @synthesize responseJSON = _responseJSON;
 @synthesize JSONReadingOptions = _JSONReadingOptions;
 @synthesize JSONError = _JSONError;
@@ -48,14 +48,14 @@ static dispatch_queue_t json_request_operation_processing_queue() {
 										success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON))success
 										failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON))failure
 {
-    AFJSONRequestOperation *requestOperation = [(AFJSONRequestOperation *)[self alloc] initWithRequest:urlRequest];
-    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    MCC_PREFIXED_NAME(AFJSONRequestOperation) *requestOperation = [(MCC_PREFIXED_NAME(AFJSONRequestOperation) *)[self alloc] initWithRequest:urlRequest];
+    [requestOperation setCompletionBlockWithSuccess:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject) {
         if (success) {
             success(operation.request, operation.response, responseObject);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error) {
         if (failure) {
-            failure(operation.request, operation.response, error, [(AFJSONRequestOperation *)operation responseJSON]);
+            failure(operation.request, operation.response, error, [(MCC_PREFIXED_NAME(AFJSONRequestOperation) *)operation responseJSON]);
         }
     }];
 
@@ -81,7 +81,7 @@ static dispatch_queue_t json_request_operation_processing_queue() {
                 NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
                 [userInfo setValue:@"Operation responseData failed decoding as a UTF-8 string" forKey:NSLocalizedDescriptionKey];
                 [userInfo setValue:[NSString stringWithFormat:@"Could not decode string: %@", self.responseString] forKey:NSLocalizedFailureReasonErrorKey];
-                error = [[NSError alloc] initWithDomain:AFNetworkingErrorDomain code:NSURLErrorCannotDecodeContentData userInfo:userInfo];
+                error = [[NSError alloc] initWithDomain:MCC_PREFIXED_NAME(AFNetworkingErrorDomain) code:NSURLErrorCannotDecodeContentData userInfo:userInfo];
             }
         }
 
@@ -100,7 +100,7 @@ static dispatch_queue_t json_request_operation_processing_queue() {
     }
 }
 
-#pragma mark - AFHTTPRequestOperation
+#pragma mark - MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 
 + (NSSet *)acceptableContentTypes {
     return [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", nil];
@@ -110,8 +110,8 @@ static dispatch_queue_t json_request_operation_processing_queue() {
     return [[[request URL] pathExtension] isEqualToString:@"json"] || [super canProcessRequest:request];
 }
 
-- (void)setCompletionBlockWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+- (void)setCompletionBlockWithSuccess:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+                              failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-retain-cycles"

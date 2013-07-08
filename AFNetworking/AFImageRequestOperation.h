@@ -1,4 +1,4 @@
-// AFImageRequestOperation.h
+// MCC_PREFIXED_NAME(AFImageRequestOperation).h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -49,7 +49,7 @@
  - `image/x-xbitmap`
  - `image/x-win-bitmap`
  */
-@interface AFImageRequestOperation : AFHTTPRequestOperation
+@interface MCC_PREFIXED_NAME(AFImageRequestOperation) : MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 
 /**
  An image constructed from the response data. If an error occurs during the request, `nil` will be returned, and the `error` property will be set to the error.

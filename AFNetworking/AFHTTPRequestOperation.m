@@ -1,4 +1,4 @@
-// AFHTTPRequestOperation.m
+// MCC_PREFIXED_NAME(AFHTTPRequestOperation).m
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 //
@@ -33,7 +33,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wstrict-selector-match"
 
-NSSet * AFContentTypesFromHTTPHeader(NSString *string) {
+NSSet * MCC_PREFIXED_NAME(AFContentTypesFromHTTPHeader)(NSString *string) {
     if (!string) {
         return nil;
     }
@@ -57,7 +57,7 @@ NSSet * AFContentTypesFromHTTPHeader(NSString *string) {
     return [NSSet setWithSet:mutableContentTypes];
 }
 
-static void AFGetMediaTypeAndSubtypeWithString(NSString *string, NSString **type, NSString **subtype) {
+static void MCC_PREFIXED_NAME(AFGetMediaTypeAndSubtypeWithString)(NSString *string, NSString **type, NSString **subtype) {
     if (!string) {
         return;
     }
@@ -69,7 +69,7 @@ static void AFGetMediaTypeAndSubtypeWithString(NSString *string, NSString **type
     [scanner scanUpToString:@";" intoString:subtype];
 }
 
-static NSString * AFStringFromIndexSet(NSIndexSet *indexSet) {
+static NSString * MCC_PREFIXED_NAME(AFStringFromIndexSet)(NSIndexSet *indexSet) {
     NSMutableString *string = [NSMutableString string];
 
     NSRange range = NSMakeRange([indexSet firstIndex], 1);
@@ -99,7 +99,7 @@ static NSString * AFStringFromIndexSet(NSIndexSet *indexSet) {
     return string;
 }
 
-static void AFSwizzleClassMethodWithClassAndSelectorUsingBlock(Class klass, SEL selector, id block) {
+static void MCC_PREFIXED_NAME(AFSwizzleClassMethodWithClassAndSelectorUsingBlock)(Class klass, SEL selector, id block) {
     Method originalMethod = class_getClassMethod(klass, selector);
     IMP implementation = imp_implementationWithBlock((AF_CAST_TO_BLOCK)block);
     class_replaceMethod(objc_getMetaClass([NSStringFromClass(klass) UTF8String]), selector, implementation, method_getTypeEncoding(originalMethod));
@@ -107,13 +107,13 @@ static void AFSwizzleClassMethodWithClassAndSelectorUsingBlock(Class klass, SEL 
 
 #pragma mark -
 
-@interface AFHTTPRequestOperation ()
+@interface MCC_PREFIXED_NAME(AFHTTPRequestOperation) ()
 @property (readwrite, nonatomic, strong) NSURLRequest *request;
 @property (readwrite, nonatomic, strong) NSHTTPURLResponse *response;
 @property (readwrite, nonatomic, strong) NSError *HTTPError;
 @end
 
-@implementation AFHTTPRequestOperation
+@implementation MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 @synthesize HTTPError = _HTTPError;
 @synthesize successCallbackQueue = _successCallbackQueue;
 @synthesize failureCallbackQueue = _failureCallbackQueue;
@@ -142,18 +142,18 @@ static void AFSwizzleClassMethodWithClassAndSelectorUsingBlock(Class klass, SEL 
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
             [userInfo setValue:self.responseString forKey:NSLocalizedRecoverySuggestionErrorKey];
             [userInfo setValue:[self.request URL] forKey:NSURLErrorFailingURLErrorKey];
-            [userInfo setValue:self.request forKey:AFNetworkingOperationFailingURLRequestErrorKey];
-            [userInfo setValue:self.response forKey:AFNetworkingOperationFailingURLResponseErrorKey];
+            [userInfo setValue:self.request forKey:MCC_PREFIXED_NAME(AFNetworkingOperationFailingURLRequestErrorKey)];
+            [userInfo setValue:self.response forKey:MCC_PREFIXED_NAME(AFNetworkingOperationFailingURLResponseErrorKey)];
 
             if (![self hasAcceptableStatusCode]) {
                 NSUInteger statusCode = ([self.response isKindOfClass:[NSHTTPURLResponse class]]) ? (NSUInteger)[self.response statusCode] : 200;
-                [userInfo setValue:[NSString stringWithFormat:NSLocalizedStringFromTable(@"Expected status code in (%@), got %d", @"AFNetworking", nil), AFStringFromIndexSet([[self class] acceptableStatusCodes]), statusCode] forKey:NSLocalizedDescriptionKey];
-                self.HTTPError = [[NSError alloc] initWithDomain:AFNetworkingErrorDomain code:NSURLErrorBadServerResponse userInfo:userInfo];
+                [userInfo setValue:[NSString stringWithFormat:NSLocalizedStringFromTable(@"Expected status code in (%@), got %d", @"AFNetworking", nil), MCC_PREFIXED_NAME(AFStringFromIndexSet)([[self class] acceptableStatusCodes]), statusCode] forKey:NSLocalizedDescriptionKey];
+                self.HTTPError = [[NSError alloc] initWithDomain:MCC_PREFIXED_NAME(AFNetworkingErrorDomain) code:NSURLErrorBadServerResponse userInfo:userInfo];
             } else if (![self hasAcceptableContentType]) {
                 // Don't invalidate content type if there is no content
                 if ([self.responseData length] > 0) {
                     [userInfo setValue:[NSString stringWithFormat:NSLocalizedStringFromTable(@"Expected content type %@, got %@", @"AFNetworking", nil), [[self class] acceptableContentTypes], [self.response MIMEType]] forKey:NSLocalizedDescriptionKey];
-                    self.HTTPError = [[NSError alloc] initWithDomain:AFNetworkingErrorDomain code:NSURLErrorCannotDecodeContentData userInfo:userInfo];
+                    self.HTTPError = [[NSError alloc] initWithDomain:MCC_PREFIXED_NAME(AFNetworkingErrorDomain) code:NSURLErrorCannotDecodeContentData userInfo:userInfo];
                 }
             }
         }
@@ -171,7 +171,7 @@ static void AFSwizzleClassMethodWithClassAndSelectorUsingBlock(Class klass, SEL 
     // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.4.1
     if (self.response && !self.response.textEncodingName && self.responseData && [self.response respondsToSelector:@selector(allHeaderFields)]) {
         NSString *type = nil;
-        AFGetMediaTypeAndSubtypeWithString([[self.response allHeaderFields] valueForKey:@"Content-Type"], &type, nil);
+        MCC_PREFIXED_NAME(AFGetMediaTypeAndSubtypeWithString)([[self.response allHeaderFields] valueForKey:@"Content-Type"], &type, nil);
 
         if ([type isEqualToString:@"text"]) {
             return NSISOLatin1StringEncoding;
@@ -259,10 +259,10 @@ static void AFSwizzleClassMethodWithClassAndSelectorUsingBlock(Class klass, SEL 
     }
 }
 
-- (void)setCompletionBlockWithSuccess:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
-                              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+- (void)setCompletionBlockWithSuccess:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject))success
+                              failure:(void (^)(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error))failure
 {
-    // completionBlock is manually nilled out in AFURLConnectionOperation to break the retain cycle.
+    // completionBlock is manually nilled out in MCC_PREFIXED_NAME(AFURLConnectionOperation) to break the retain cycle.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-retain-cycles"
 #pragma clang diagnostic ignored "-Wgnu"
@@ -284,7 +284,7 @@ static void AFSwizzleClassMethodWithClassAndSelectorUsingBlock(Class klass, SEL 
 #pragma clang diagnostic pop
 }
 
-#pragma mark - AFHTTPRequestOperation
+#pragma mark - MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 
 + (NSIndexSet *)acceptableStatusCodes {
     return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
@@ -293,7 +293,7 @@ static void AFSwizzleClassMethodWithClassAndSelectorUsingBlock(Class klass, SEL 
 + (void)addAcceptableStatusCodes:(NSIndexSet *)statusCodes {
     NSMutableIndexSet *mutableStatusCodes = [[NSMutableIndexSet alloc] initWithIndexSet:[self acceptableStatusCodes]];
     [mutableStatusCodes addIndexes:statusCodes];
-    AFSwizzleClassMethodWithClassAndSelectorUsingBlock([self class], @selector(acceptableStatusCodes), ^(__unused id _self) {
+    MCC_PREFIXED_NAME(AFSwizzleClassMethodWithClassAndSelectorUsingBlock)([self class], @selector(acceptableStatusCodes), ^(__unused id _self) {
         return mutableStatusCodes;
     });
 }
@@ -305,17 +305,17 @@ static void AFSwizzleClassMethodWithClassAndSelectorUsingBlock(Class klass, SEL 
 + (void)addAcceptableContentTypes:(NSSet *)contentTypes {
     NSMutableSet *mutableContentTypes = [[NSMutableSet alloc] initWithSet:[self acceptableContentTypes] copyItems:YES];
     [mutableContentTypes unionSet:contentTypes];
-    AFSwizzleClassMethodWithClassAndSelectorUsingBlock([self class], @selector(acceptableContentTypes), ^(__unused id _self) {
+    MCC_PREFIXED_NAME(AFSwizzleClassMethodWithClassAndSelectorUsingBlock)([self class], @selector(acceptableContentTypes), ^(__unused id _self) {
         return mutableContentTypes;
     });
 }
 
 + (BOOL)canProcessRequest:(NSURLRequest *)request {
-    if ([[self class] isEqual:[AFHTTPRequestOperation class]]) {
+    if ([[self class] isEqual:[MCC_PREFIXED_NAME(AFHTTPRequestOperation) class]]) {
         return YES;
     }
 
-    return [[self acceptableContentTypes] intersectsSet:AFContentTypesFromHTTPHeader([request valueForHTTPHeaderField:@"Accept"])];
+    return [[self acceptableContentTypes] intersectsSet:MCC_PREFIXED_NAME(AFContentTypesFromHTTPHeader)([request valueForHTTPHeaderField:@"Accept"])];
 }
 
 @end
