@@ -67,11 +67,11 @@ static char kAFImageRequestOperationObjectKey;
     return _af_imageRequestOperationQueue;
 }
 
-+ (AFImageCache *)af_sharedImageCache {
++ (MCC_PREFIXED_NAME(AFImageCache) *)af_sharedImageCache {
     static MCC_PREFIXED_NAME(AFImageCache) *_af_imageCache = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
-        _af_imageCache = [[AFImageCache alloc] init];
+        _af_imageCache = [[MCC_PREFIXED_NAME(AFImageCache) alloc] init];
     });
 
     return _af_imageCache;
@@ -101,41 +101,46 @@ static char kAFImageRequestOperationObjectKey;
 
     UIImage *cachedImage = [[[self class] af_sharedImageCache] cachedImageForRequest:urlRequest];
     if (cachedImage) {
+        self.af_imageRequestOperation = nil;
+
         if (success) {
             success(nil, nil, cachedImage);
         } else {
             self.image = cachedImage;
         }
-
-        self.af_imageRequestOperation = nil;
     } else {
         if (placeholderImage) {
             self.image = placeholderImage;
         }
 
-        MCC_PREFIXED_NAME(AFImageRequestOperation) *requestOperation = [[AFImageRequestOperation alloc] initWithRequest:urlRequest];
-        [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        MCC_PREFIXED_NAME(AFImageRequestOperation) *requestOperation = [[MCC_PREFIXED_NAME(AFImageRequestOperation) alloc] initWithRequest:urlRequest];
+		
+#ifdef _AFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_
+		requestOperation.allowsInvalidSSLCertificate = YES;
+#endif
+		
+        [requestOperation setCompletionBlockWithSuccess:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject) {
             if ([urlRequest isEqual:[self.af_imageRequestOperation request]]) {
+                if (self.af_imageRequestOperation == operation) {
+                    self.af_imageRequestOperation = nil;
+                }
+
                 if (success) {
                     success(operation.request, operation.response, responseObject);
                 } else if (responseObject) {
                     self.image = responseObject;
                 }
-
-                if (self.af_imageRequestOperation == operation) {
-                    self.af_imageRequestOperation = nil;
-                }
             }
 
             [[[self class] af_sharedImageCache] cacheImage:responseObject forRequest:urlRequest];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        } failure:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error) {
             if ([urlRequest isEqual:[self.af_imageRequestOperation request]]) {
-                if (failure) {
-                    failure(operation.request, operation.response, error);
-                }
-
                 if (self.af_imageRequestOperation == operation) {
                     self.af_imageRequestOperation = nil;
+                }
+
+                if (failure) {
+                    failure(operation.request, operation.response, error);
                 }
             }
         }];
@@ -170,14 +175,14 @@ static inline NSString * MCC_PREFIXED_NAME(AFImageCacheKeyFromURLRequest)(NSURLR
             break;
     }
 
-	return [self objectForKey:AFImageCacheKeyFromURLRequest(request)];
+	return [self objectForKey:MCC_PREFIXED_NAME(AFImageCacheKeyFromURLRequest)(request)];
 }
 
 - (void)cacheImage:(UIImage *)image
         forRequest:(NSURLRequest *)request
 {
     if (image && request) {
-        [self setObject:image forKey:AFImageCacheKeyFromURLRequest(request)];
+        [self setObject:image forKey:MCC_PREFIXED_NAME(AFImageCacheKeyFromURLRequest)(request)];
     }
 }
 

@@ -36,12 +36,9 @@ static dispatch_queue_t image_request_operation_processing_queue() {
 #import <CoreGraphics/CoreGraphics.h>
 
 static UIImage * MCC_PREFIXED_NAME(AFImageWithDataAtScale)(NSData *data, CGFloat scale) {
-    if ([UIImage instancesRespondToSelector:@selector(initWithData:scale:)]) {
-        return [[UIImage alloc] initWithData:data scale:scale];
-    } else {
-        UIImage *image = [[UIImage alloc] initWithData:data];
-        return [[UIImage alloc] initWithCGImage:[image CGImage] scale:scale orientation:image.imageOrientation];
-    }
+    UIImage *image = [[UIImage alloc] initWithData:data];
+    
+    return [[UIImage alloc] initWithCGImage:[image CGImage] scale:scale orientation:image.imageOrientation];
 }
 
 static UIImage * MCC_PREFIXED_NAME(AFInflatedImageFromResponseWithDataAtScale)(NSHTTPURLResponse *response, NSData *data, CGFloat scale) {
@@ -49,33 +46,30 @@ static UIImage * MCC_PREFIXED_NAME(AFInflatedImageFromResponseWithDataAtScale)(N
         return nil;
     }
 
+    UIImage *image = MCC_PREFIXED_NAME(AFImageWithDataAtScale)(data, scale);
+    if (image.images) {
+        return image;
+    }
+    
     CGImageRef imageRef = nil;
-
     CGDataProviderRef dataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef)data);
 
-    NSSet *contentTypes = MCC_PREFIXED_NAME(AFContentTypesFromHTTPHeader)([[response allHeaderFields] valueForKey:@"Content-Type"]);
-    if ([contentTypes containsObject:@"image/png"]) {
+    if ([response.MIMEType isEqualToString:@"image/png"]) {
         imageRef = CGImageCreateWithPNGDataProvider(dataProvider,  NULL, true, kCGRenderingIntentDefault);
-    } else if ([contentTypes containsObject:@"image/jpeg"]) {
+    } else if ([response.MIMEType isEqualToString:@"image/jpeg"]) {
         imageRef = CGImageCreateWithJPEGDataProvider(dataProvider, NULL, true, kCGRenderingIntentDefault);
     }
     
     if (!imageRef) {
-        UIImage *image = MCC_PREFIXED_NAME(AFImageWithDataAtScale)(data, scale);
-        if (image.images) {
+        imageRef = CGImageCreateCopy([image CGImage]);
+
+        if (!imageRef) {
             CGDataProviderRelease(dataProvider);
-            
             return image;
         }
-        
-        imageRef = CGImageCreateCopy([image CGImage]);
     }
 
     CGDataProviderRelease(dataProvider);
-
-    if (!imageRef) {
-        return nil;
-    }
 
     size_t width = CGImageGetWidth(imageRef);
     size_t height = CGImageGetHeight(imageRef);
@@ -102,7 +96,7 @@ static UIImage * MCC_PREFIXED_NAME(AFInflatedImageFromResponseWithDataAtScale)(N
     if (!context) {
         CGImageRelease(imageRef);
 
-        return [[UIImage alloc] initWithData:data];
+        return image;
     }
 
     CGRect rect = CGRectMake(0.0f, 0.0f, width, height);
@@ -110,7 +104,7 @@ static UIImage * MCC_PREFIXED_NAME(AFInflatedImageFromResponseWithDataAtScale)(N
     CGImageRef inflatedImageRef = CGBitmapContextCreateImage(context);
     CGContextRelease(context);
 
-    UIImage *inflatedImage = [[UIImage alloc] initWithCGImage:inflatedImageRef scale:scale orientation:UIImageOrientationUp];
+    UIImage *inflatedImage = [[UIImage alloc] initWithCGImage:inflatedImageRef scale:scale orientation:image.imageOrientation];
     CGImageRelease(inflatedImageRef);
     CGImageRelease(imageRef);
     
@@ -161,8 +155,8 @@ static UIImage * MCC_PREFIXED_NAME(AFInflatedImageFromResponseWithDataAtScale)(N
 										 success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image))success
 										 failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error))failure
 {
-    MCC_PREFIXED_NAME(AFImageRequestOperation) *requestOperation = [(AFImageRequestOperation *)[self alloc] initWithRequest:urlRequest];
-    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    MCC_PREFIXED_NAME(AFImageRequestOperation) *requestOperation = [(MCC_PREFIXED_NAME(AFImageRequestOperation) *)[self alloc] initWithRequest:urlRequest];
+    [requestOperation setCompletionBlockWithSuccess:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, id responseObject) {
         if (success) {
             UIImage *image = responseObject;
             if (imageProcessingBlock) {
@@ -179,7 +173,7 @@ static UIImage * MCC_PREFIXED_NAME(AFInflatedImageFromResponseWithDataAtScale)(N
                 success(operation.request, operation.response, image);
             }
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(MCC_PREFIXED_NAME(AFHTTPRequestOperation) *operation, NSError *error) {
         if (failure) {
             failure(operation.request, operation.response, error);
         }

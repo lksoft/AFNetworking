@@ -111,12 +111,14 @@ static void MCC_PREFIXED_NAME(AFSwizzleClassMethodWithClassAndSelectorUsingBlock
 @property (readwrite, nonatomic, strong) NSURLRequest *request;
 @property (readwrite, nonatomic, strong) NSHTTPURLResponse *response;
 @property (readwrite, nonatomic, strong) NSError *HTTPError;
+@property (readwrite, nonatomic, strong) NSRecursiveLock *lock;
 @end
 
 @implementation MCC_PREFIXED_NAME(AFHTTPRequestOperation)
 @synthesize HTTPError = _HTTPError;
 @synthesize successCallbackQueue = _successCallbackQueue;
 @synthesize failureCallbackQueue = _failureCallbackQueue;
+@dynamic lock;
 @dynamic request;
 @dynamic response;
 
@@ -137,6 +139,7 @@ static void MCC_PREFIXED_NAME(AFSwizzleClassMethodWithClassAndSelectorUsingBlock
 }
 
 - (NSError *)error {
+    [self.lock lock];
     if (!self.HTTPError && self.response) {
         if (![self hasAcceptableStatusCode] || ![self hasAcceptableContentType]) {
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -158,6 +161,7 @@ static void MCC_PREFIXED_NAME(AFSwizzleClassMethodWithClassAndSelectorUsingBlock
             }
         }
     }
+    [self.lock unlock];
 
     if (self.HTTPError) {
         return self.HTTPError;
