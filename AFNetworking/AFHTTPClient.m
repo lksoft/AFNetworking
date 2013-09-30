@@ -80,16 +80,17 @@ static NSString * MCC_PREFIXED_NAME(AFBase64EncodedStringFromString)(NSString *s
     return [[NSString alloc] initWithData:mutableData encoding:NSASCIIStringEncoding];
 }
 
-static NSString * const kAFCharactersToBeEscaped = @":/?&=;+!@#$()',*";
+static NSString * const kAFCharactersToBeEscapedInQueryString = @":/?&=;+!@#$()',*";
 static NSString * MCC_PREFIXED_NAME(AFPercentEscapedQueryStringPairMemberFromStringWithEncoding)(NSString *string, NSStringEncoding encoding) {
     static NSString * const kAFCharactersToLeaveUnescapedInQueryStringPairKey = @"[].";
 
 	return (__bridge_transfer  NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)string, (__bridge CFStringRef)kAFCharactersToLeaveUnescapedInQueryStringPairKey, (__bridge CFStringRef)kAFCharactersToBeEscapedInQueryString, CFStringConvertNSStringEncodingToEncoding(encoding));
 }
-
+/*
 static NSString * MCC_PREFIXED_NAME(AFPercentEscapedQueryStringValueFromStringWithEncoding)(NSString *string, NSStringEncoding encoding) {
 	return (__bridge_transfer  NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)string, NULL, (__bridge CFStringRef)kAFCharactersToBeEscapedInQueryString, CFStringConvertNSStringEncodingToEncoding(encoding));
 }
+ */
 
 #pragma mark -
 

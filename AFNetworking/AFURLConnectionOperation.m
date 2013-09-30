@@ -104,8 +104,6 @@ static inline BOOL MCC_PREFIXED_NAME(AFStateTransitionIsValid)(AFOperationState 
     }
 }
 
-#ifdef _AFNETWORKING_PIN_SSL_CERTIFICATES_
-
 #if !defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 static NSData *MCC_PREFIXED_NAME(AFSecKeyGetData)(SecKeyRef key) {
     CFDataRef data = NULL;
@@ -125,8 +123,6 @@ static BOOL MCC_PREFIXED_NAME(AFSecKeyIsEqualToKey)(SecKeyRef key1, SecKeyRef ke
     return [MCC_PREFIXED_NAME(AFSecKeyGetData)(key1) isEqual:MCC_PREFIXED_NAME(AFSecKeyGetData)(key2)];
 #endif
 }
-
-#endif
 
 @interface MCC_PREFIXED_NAME(AFURLConnectionOperation) ()
 @property (readwrite, nonatomic, assign) AFOperationState state;
