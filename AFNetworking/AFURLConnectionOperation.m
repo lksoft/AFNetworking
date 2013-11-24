@@ -112,6 +112,8 @@ static NSData *MCC_PREFIXED_NAME(AFSecKeyGetData)(SecKeyRef key) {
     NSCAssert(status == errSecSuccess, @"SecItemExport error: %ld", (long int)status);
     NSCParameterAssert(data);
     
+	//	Removes compiler warning
+	if (status) {}
     return (__bridge_transfer NSData *)data;
 }
 #endif
